@@ -1,0 +1,24 @@
+{
+    "MenuList": [
+        {
+            "title": "Most Viewed Products",
+            "icon": "most_popular",
+            "type": "0"
+        },
+        {
+            "title": "Most Ordered Products",
+            "icon": "most_ordered",
+            "type": "1"
+        },
+        {
+            "title": "Most Shared Products",
+            "icon": "most_shared",
+            "type": "2"
+        },
+        {
+            "title": "Product Category",
+            "icon": "category_icon",
+            "type": "3"
+        }
+    ]
+}

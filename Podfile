@@ -1,7 +1,6 @@
 use_frameworks!
 
 target "eCommerce" do
-    platform :ios, '13.0'
     'https://github.com/CocoaPods/Specs.git'
     pod 'Alamofire'
     pod 'MBProgressHUD'

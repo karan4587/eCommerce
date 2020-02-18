@@ -76,12 +76,8 @@ extension eCommerceServiceModel {
         var filterCategoriesProductArray : [[String : Any]] = []
         var finalFilterProductsArray : [[String : Any]] = []
         var updatedFilterCategoriesProductArray : [[String : Any]] = []
-        
-        for i in 0..<categoriesArray.count {
-            if let categoryProductsArray = categoriesArray[i]["products"] as? [[String : Any]], !categoryProductsArray.isEmpty {
-                filterCategoriesProductArray.append(contentsOf: categoryProductsArray)
-            }
-        }
+      
+        filterCategoriesProductArray.append(contentsOf: categoriesArray.flatMap({($0["products"] as? [[String : Any]] ?? [])}))
         
         for x in 0..<ratingProductsArray.count {
             updatedFilterCategoriesProductArray = filterCategoriesProductArray.filter{$0["id"] as? Int == ratingProductsArray[x]["id"] as? Int}

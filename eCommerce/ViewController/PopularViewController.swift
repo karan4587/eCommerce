@@ -32,10 +32,8 @@ class PopularViewController: UIViewController {
         
         self.setNavigationBarContent()
         
-        if self.dataLoadType == RatingType.MostViewedProducts {
-            // API calling and  Cache  data
-            self.getCatgoryDataFromLocalStorage()
-        }
+        // API calling and  Cache  data
+        self.getCatgoryDataFromLocalStorage()
         
         self.setSideMenuViewController()
     }

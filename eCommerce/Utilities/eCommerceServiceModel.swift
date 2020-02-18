@@ -75,42 +75,35 @@ extension eCommerceServiceModel {
     class func getFilterProductsArray(ratingProductsArray : [[String : Any]], categoriesArray : [[String : Any]], productRatingType : RatingType) -> [[String : Any]] {
         var filterCategoriesProductArray : [[String : Any]] = []
         var finalFilterProductsArray : [[String : Any]] = []
-        var updatedFilterCategoriesProductArray : [String : Any] = [:]
+        var updatedFilterCategoriesProductArray : [[String : Any]] = []
+        
         for i in 0..<categoriesArray.count {
-            if let categoryProductsArray = categoriesArray[i]["products"] as? [[String : Any]], !categoriesArray.isEmpty {
-                for j in 0..<categoryProductsArray.count {
-                    filterCategoriesProductArray.append(categoryProductsArray[j])
-                }
+            if let categoryProductsArray = categoriesArray[i]["products"] as? [[String : Any]], !categoryProductsArray.isEmpty {
+                filterCategoriesProductArray.append(contentsOf: categoryProductsArray)
             }
         }
         
         for x in 0..<ratingProductsArray.count {
-            for y in 0..<filterCategoriesProductArray.count {
-                let ratingsProductId = ratingProductsArray[x]["id"] as? Int
-                let categoryProductId = filterCategoriesProductArray[y]["id"] as? Int
-                if ratingsProductId == categoryProductId {
-                    updatedFilterCategoriesProductArray = filterCategoriesProductArray[y]
-                    
-                    var ratingViewCountValue = 0
-                    switch productRatingType {
-                    case .MostViewedProducts:
-                        ratingViewCountValue = ratingProductsArray[x]["view_count"] as? Int ?? 0
-                        updatedFilterCategoriesProductArray["view_count"] = ratingViewCountValue
-                        break
-                    case .MostOrderedProducts:
-                        ratingViewCountValue = ratingProductsArray[x]["order_count"] as? Int ?? 0
-                        updatedFilterCategoriesProductArray["order_count"] = ratingViewCountValue
-                        break
-                    case .MostSharedProducts:
-                        ratingViewCountValue = ratingProductsArray[x]["shares"] as? Int ?? 0
-                        updatedFilterCategoriesProductArray["shares"] = ratingViewCountValue
-                        break
-                    default:
-                        break
-                    }
-                    finalFilterProductsArray.append(updatedFilterCategoriesProductArray)
+            updatedFilterCategoriesProductArray = filterCategoriesProductArray.filter{$0["id"] as? Int == ratingProductsArray[x]["id"] as? Int}
+            if !updatedFilterCategoriesProductArray.isEmpty {
+                var ratingViewCountValue = 0
+                switch productRatingType {
+                case .MostViewedProducts:
+                    ratingViewCountValue = ratingProductsArray[x]["view_count"] as? Int ?? 0
+                    updatedFilterCategoriesProductArray[0]["view_count"] = ratingViewCountValue
+                    break
+                case .MostOrderedProducts:
+                    ratingViewCountValue = ratingProductsArray[x]["order_count"] as? Int ?? 0
+                    updatedFilterCategoriesProductArray[0]["order_count"] = ratingViewCountValue
+                    break
+                case .MostSharedProducts:
+                    ratingViewCountValue = ratingProductsArray[x]["shares"] as? Int ?? 0
+                    updatedFilterCategoriesProductArray[0]["shares"] = ratingViewCountValue
+                    break
+                default:
                     break
                 }
+                finalFilterProductsArray += updatedFilterCategoriesProductArray
             }
         }
         return finalFilterProductsArray
@@ -119,15 +112,19 @@ extension eCommerceServiceModel {
     class func getChildCategoryProductsArray(childCategoryIdArray : [Int], categoryProductsArray : [[String : Any]]) -> [[String : Any]] {
         var filterChildArray : [[String : Any]] = []
         for i in childCategoryIdArray {
-            for j in 0..<categoryProductsArray.count {
-                let childId = i
-                let categoryId = categoryProductsArray[j]["id"] as? Int
-                if childId == categoryId {
-                    filterChildArray.append(categoryProductsArray[j])
-                    break
-                }
+            let child = categoryProductsArray.filter{$0["id"] as? Int == i}
+            if !child.isEmpty {
+                filterChildArray.append(child.last!)
             }
         }
         return filterChildArray
+    }
+}
+
+
+//MARK:-Connectivity Class for Internet check
+class Connectivity {
+    class var isConnectedToInternet:Bool {
+        return NetworkReachabilityManager()?.isReachable ?? false
     }
 }

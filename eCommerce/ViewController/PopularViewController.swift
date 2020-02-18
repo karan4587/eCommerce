@@ -32,8 +32,10 @@ class PopularViewController: UIViewController {
         
         self.setNavigationBarContent()
         
-        // API calling and  Cache  data
-        self.getCatgoryDataFromLocalStorage()
+        if self.dataLoadType == RatingType.MostViewedProducts {
+            // API calling and  Cache  data
+            self.getCatgoryDataFromLocalStorage()
+        }
         
         self.setSideMenuViewController()
     }
@@ -91,8 +93,10 @@ extension PopularViewController {
                 self.sortFilterArrayBasedOnCount()
             }
         } else {
-            MBProgressHUD.showAdded(to: self.view, animated: true)
-            self.getCategoryDataFromAPIAndCache()
+            if Connectivity.isConnectedToInternet {
+                MBProgressHUD.showAdded(to: self.view, animated: true)
+                self.getCategoryDataFromAPIAndCache()
+            }
         }
         
     }
